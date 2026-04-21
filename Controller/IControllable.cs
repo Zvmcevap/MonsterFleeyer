@@ -57,12 +57,14 @@ namespace Bombardino.Controller
 
         private void SwitchMode()
         {
+            if (GameManager.Instance.MenuScreen.CurrentScreen != MenuWorld.EMenuScreens.Start) return;
             _playerSpeed = !_playerSpeed;
             PrintStatusStrings();
         }
 
         private void ChangeSpeed(float delta)
         {
+            if (GameManager.Instance.MenuScreen.CurrentScreen != MenuWorld.EMenuScreens.Start) return;
             if (_playerSpeed)
             {
                 float change = GameManager.Instance.PlayerSpeed + delta;

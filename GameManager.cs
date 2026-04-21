@@ -33,8 +33,6 @@ namespace Bombardino
 
         #region Singleton stuff
         private static GameManager? _instance;
-        private bool _endScreen;
-
         public static GameManager Instance
         {
             get

@@ -11,7 +11,7 @@ Some code reuse from my previous project: [CLIRayMarchingEngine](https://github.
 
 ---
 - You have 2 **LIFE** points, when the **monster** touches you, you loose a life.
-- After the monster touches you, you have 1 second of **invurability**.
+- After the monster touches you, you have 1 second of **invulnerability**.
 - You can set the difficulty at the *start* screen by changing the speed of yourself and the monster seperately.
 - You can and the monster can move in 4 directions (up-down, left-right).
 
@@ -35,7 +35,7 @@ PPPPPPP
 PP       
 PP       
 ```
-Player invornable:
+Player invulnerable:
 ```
 IIIIIIII
    II   

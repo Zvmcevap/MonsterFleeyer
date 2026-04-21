@@ -48,6 +48,7 @@ namespace Bombardino.Simulation
         {
             CurrentScreen = EMenuScreens.Start;
             RealEstate = _menuScreens[(int)EMenuScreens.Start];
+            ((MenuHandler)_playerController.Target).PrintStatusStrings();
         }
         public void ShowWinScreen()
         {
@@ -101,13 +102,15 @@ namespace Bombardino.Simulation
 
     public class GamePlayWorld : GameWorld
     {
-        private Character _player;
-        private Character _monster;
-        private MonsterController _monsterController;
+        private readonly Character _player;
+        private readonly Character _monster;
+        private readonly MonsterController _monsterController;
 
-        private const int PLAYER_HEALTH = 3;
-        private float _gracePeriod = 1f;
+        private const int PLAYER_HEALTH = 2;
+        private const float GRACE_PERIOD = 1f;
+        private float _gracePeriodTimer = 0f;
         private bool _hit = false;
+        private Treasure _treasure;
 
         public GamePlayWorld(int size) : base(size)
         {
@@ -120,33 +123,27 @@ namespace Bombardino.Simulation
             Movables.Add(_monster);
         }
 
-        /// <summary>
-        /// Start a new game passing in the two players
-        /// </summary>
-        /// <param name="p1">Player 1</param>
-        /// <param name="p2">Player 2</param>
         public void Initialize(float playerSpeed, float monsterSpeed)
         {
-            Positions2GameObjectsDict.Clear();
-            RealEstate.Clear();
-
-            _player.Health = PLAYER_HEALTH;
-            _player.Speed = playerSpeed;
-            _player.Velocity = Vec2<float>.Zero;
-            _player.SetPosition(Vec2<int>.Zero);
-
-            _monster.Velocity = Vec2<float>.Zero;
-            _monster.SetPosition(new Vec2<int>(Size - 1, Size - 1));
-            _monster.Speed = monsterSpeed;
+            _hit = false;
+            _player.Reset(Vec2<int>.Zero, PLAYER_HEALTH, playerSpeed);
+            _player.Sprite = StringHelpers.PlayerSprite;
+            _monster.Reset(Vec2<int>.One * (Size - 1), 1, monsterSpeed);
+            _monsterController.Reset();
+            PlaceImmovables();
+            while (!_monsterController.FindPathToTreasure())
+            {
+                PlaceImmovables();
+            }
 
             Positions2GameObjectsDict[_player.Position] = _player;
             Positions2GameObjectsDict[_monster.Position] = _monster;
-
-            PlaceImmovables();
         }
 
         private void PlaceImmovables()
         {
+            Positions2GameObjectsDict.Clear();
+            RealEstate.Clear();
             List<Vec2<int>> validPositions = new();
             for (int i = 1; i < Size - 2; i++)
             {
@@ -170,6 +167,7 @@ namespace Bombardino.Simulation
             var treasurePos = validPositions[treasureIndex];
             validPositions.Remove(treasurePos);
             var treasure = new Treasure(treasurePos);
+            _treasure = treasure;
             Positions2GameObjectsDict[treasure.Position] = treasure;
             RealEstate.Add(treasure);
         }
@@ -183,20 +181,29 @@ namespace Bombardino.Simulation
         public void UpdateGame(float dt)
         {
             Parallel.ForEach(Movables, mover => mover.Move(dt));
+
+            if (_player.Position == _treasure.Position)
+            {
+                GameManager.Instance.WinGame();
+            }
+
             if (_hit)
             {
-                _gracePeriod += dt;
-                if (_gracePeriod > 1f)
+                _gracePeriodTimer += dt;
+                $"HIT! Invornable for {GRACE_PERIOD - _gracePeriodTimer}".PrintBellowCanvas(1);
+                if (_gracePeriodTimer > GRACE_PERIOD)
                 {
                     _hit = false;
-                    _gracePeriod = 0f;
+                    _gracePeriodTimer = 0f;
+                    _player.Sprite = StringHelpers.PlayerSprite;
                 }
             }
             else
             {
                 CheckCollision();
+                "".PrintBellowCanvas(1);
             }
-            $"Remaining Health = {_player.Health}".PrintBellowCanvas(0);
+            $"HEALTH = {_player.Health}".PrintBellowCanvas(0);
         }
 
         private void CheckCollision()
@@ -208,6 +215,7 @@ namespace Bombardino.Simulation
                 {
                     GameManager.Instance.LooseGame();
                 }
+                _player.Sprite = StringHelpers.InvornablePlayerSprite;
                 _hit = true;
             }
         }

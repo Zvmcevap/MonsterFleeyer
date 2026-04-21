@@ -5,6 +5,7 @@ namespace Bombardino.Simulation
     public class Character : IGameObject, IMovable, IDestroyable, IControllable
     {
         private GameManager _gameManager;
+        private bool _winOnNextTile;
 
         public bool IsPlayer { get; private set; }
         public char[,] Sprite { get; set; }
@@ -52,6 +53,10 @@ namespace Bombardino.Simulation
 
             if (MovedAmount >= 1f)
             {
+                if (_winOnNextTile)
+                {
+                    _gameManager.WinGame();
+                }
                 Velocity = Vec2<float>.Zero;
                 MovedAmount = 0f;
 
@@ -62,6 +67,15 @@ namespace Bombardino.Simulation
                 Position = TargetPosition;
                 PartialPosition = new Vec2<float>((float)Position.x, (float)Position.y);
             }
+        }
+
+        public void Reset(Vec2<int> pos, int health, float speed)
+        {
+            _winOnNextTile = false;
+            Health = health;
+            Speed = speed;
+            Velocity = Vec2<float>.Zero;
+            SetPosition(pos);
         }
 
         public void HandleAction()
@@ -118,16 +132,9 @@ namespace Bombardino.Simulation
 
             gw.Positions2GameObjectsDict.TryGetValue(newPosition, out IGameObject? blocker);
 
-            if (blocker != null && blocker is not IMovable)
+            if (blocker != null && blocker is not IMovable && blocker is not IConsumable)
             {
-                if (blocker is IConsumable)
-                {
-                    if (IsPlayer) ((IConsumable)blocker).Consume();
-                }
-                else
-                {
                     return false;
-                }
             }
             gw.Positions2GameObjectsDict[newPosition] = this;
             return true;

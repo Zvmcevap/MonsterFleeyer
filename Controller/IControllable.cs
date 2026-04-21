@@ -1,4 +1,6 @@
 ﻿
+using Bombardino.Simulation;
+
 namespace Bombardino.Controller
 {
     /// <summary>
@@ -23,7 +25,14 @@ namespace Bombardino.Controller
 
         public void HandleAction()
         {
-            GameManager.Instance.StartNewGame();
+            if (GameManager.Instance.MenuScreen.CurrentScreen != MenuWorld.EMenuScreens.Start)
+            {
+                GameManager.Instance.MenuScreen.ShowStartScreen();
+            }
+            else
+            {
+                GameManager.Instance.StartNewGame();
+            }
         }
 
         public void HandleDown()
@@ -67,7 +76,7 @@ namespace Bombardino.Controller
             PrintStatusStrings();
         }
 
-        private void PrintStatusStrings()
+        public void PrintStatusStrings()
         {
             if (_playerSpeed)
             {

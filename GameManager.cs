@@ -21,7 +21,6 @@ namespace Bombardino
         public float MonsterSpeed = 5f;
 
         public bool CurrentlyPlaying;
-        public PlayerController PlayerController { get; private set; }
         public GamePlayWorld GameplayGameWorld { get; private set; }
         public MenuWorld MenuScreen { get; private set; }
         public GameWorld CurrentWorld { get; private set; }
@@ -34,6 +33,8 @@ namespace Bombardino
 
         #region Singleton stuff
         private static GameManager? _instance;
+        private bool _endScreen;
+
         public static GameManager Instance
         {
             get
@@ -96,7 +97,7 @@ namespace Bombardino
                 CurrentWorld.UpdateControls();
 
                 if (CurrentlyPlaying) GameplayGameWorld.UpdateGame(DeltaTime);
-                
+
                 Draw();
             }
         }
@@ -127,6 +128,11 @@ namespace Bombardino
 
         public void QuitApplication()
         {
+            if (CurrentlyPlaying) 
+            {
+                LooseGame();
+                return;
+            }
             IsRunning = false;
         }
 
@@ -144,14 +150,5 @@ namespace Bombardino
             string canvaString = _canvas.GetStringWBorder();
             Console.Write(canvaString);
         }
-
-
-    }
-
-    public readonly struct GameState
-    {
-
-
-
     }
 }

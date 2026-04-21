@@ -12,16 +12,16 @@ namespace Bombardino.Controller
     public abstract class ControllerBase
     {
         internal readonly GameManager _gameManager = GameManager.Instance;
-        internal IControllable _target { get; private set; }
+        public IControllable Target { get; private set; }
 
         public ControllerBase(IControllable target)
         {
-            _target = target;
+            Target = target;
         }
 
         internal void SetTarget(IControllable target)
         {
-            _target = target;
+            Target = target;
         }
         public abstract void UpdateControls();
 

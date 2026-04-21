@@ -232,6 +232,9 @@ namespace Bombardino
         }
         };
 
+        public static readonly char[,] PlayerSprite = GetSpriteFromChar('P');
+        public static readonly char[,] InvornablePlayerSprite = GetSpriteFromChar('I');
+
         public static char[,] GetSpriteFromChar(char c)
         {
             return StringToCharArray(Char2String[c]);

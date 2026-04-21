@@ -50,7 +50,7 @@
 
         public void Consume()
         {
-            GameManager.Instance.WinGame();
+            GameManager.Instance.GameplayGameWorld.Positions2GameObjectsDict.Remove(Position);
         }
 
     }

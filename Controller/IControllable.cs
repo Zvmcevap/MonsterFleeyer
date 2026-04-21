@@ -78,15 +78,16 @@ namespace Bombardino.Controller
 
         public void PrintStatusStrings()
         {
+            "WASD to change speeds, Space to play".PrintBellowCanvas(0);
             if (_playerSpeed)
             {
-                $"[PLAYER SPEED]   = < {GameManager.Instance.PlayerSpeed}  >".PrintBellowCanvas(0);
-                $" MONSTER SPEED   =   {GameManager.Instance.MonsterSpeed}".PrintBellowCanvas(1);
+                $"[PLAYER SPEED]   = < {GameManager.Instance.PlayerSpeed}  >".PrintBellowCanvas(1);
+                $" MONSTER SPEED   =   {GameManager.Instance.MonsterSpeed}".PrintBellowCanvas(2);
             }
             else
             {
-                $" PLAYER SPEED    =   {GameManager.Instance.PlayerSpeed}".PrintBellowCanvas(0);
-                $"[MONSTER SPEED]  = < {GameManager.Instance.MonsterSpeed} >".PrintBellowCanvas(1);
+                $" PLAYER SPEED    =   {GameManager.Instance.PlayerSpeed}".PrintBellowCanvas(1);
+                $"[MONSTER SPEED]  = < {GameManager.Instance.MonsterSpeed} >".PrintBellowCanvas(2);
             }
         }
     }

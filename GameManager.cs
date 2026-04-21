@@ -74,7 +74,6 @@ namespace Bombardino
             MenuScreen = new MenuWorld(10);
             CurrentWorld = MenuScreen;
 
-
             return true;
         }
         public void Shutdown()
@@ -89,10 +88,11 @@ namespace Bombardino
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Console.Clear();
-
+            MenuScreen.ShowStartScreen();
             while (IsRunning)
             {
                 DeltaTime = (float)stopwatch.Elapsed.TotalSeconds;
+                $"FPS = {(int)(1f / DeltaTime)}".PrintOnScreen(0, 0);
                 stopwatch.Restart();
                 CurrentWorld.UpdateControls();
 
@@ -138,8 +138,8 @@ namespace Bombardino
 
         private void Draw()
         {
-            $"Wins   = {_winCounter}".PrintOnScreen(0, 0);
-            $"Losses = {_looseCounter}".PrintOnScreen(0, 1);
+            $"Wins   = {_winCounter}".PrintOnScreen(0, 1);
+            $"Losses = {_looseCounter}".PrintOnScreen(0, 2);
             DrawCanvas();
         }
 

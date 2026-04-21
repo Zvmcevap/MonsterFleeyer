@@ -181,6 +181,8 @@ namespace Bombardino.Simulation
         public void UpdateGame(float dt)
         {
             Parallel.ForEach(Movables, mover => mover.Move(dt));
+            "WASD to move, SPACE to pause, Q to quit".PrintBellowCanvas(0);
+            $"".PrintBellowCanvas(2);
 
             if (_player.Position == _treasure.Position)
             {
@@ -190,7 +192,7 @@ namespace Bombardino.Simulation
             if (_hit)
             {
                 _gracePeriodTimer += dt;
-                $"HIT! Invornable for {GRACE_PERIOD - _gracePeriodTimer}".PrintBellowCanvas(1);
+                $"HIT! Invornable for {GRACE_PERIOD - _gracePeriodTimer}".PrintBellowCanvas(2);
                 if (_gracePeriodTimer > GRACE_PERIOD)
                 {
                     _hit = false;
@@ -203,7 +205,7 @@ namespace Bombardino.Simulation
                 CheckCollision();
                 "".PrintBellowCanvas(1);
             }
-            $"HEALTH = {_player.Health}".PrintBellowCanvas(0);
+            $"HEALTH = {_player.Health}".PrintBellowCanvas(1);
         }
 
         private void CheckCollision()
